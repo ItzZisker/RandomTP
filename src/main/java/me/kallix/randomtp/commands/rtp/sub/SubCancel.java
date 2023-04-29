@@ -21,7 +21,7 @@ public final class SubCancel implements RandomTPSubCommand {
             teleportProcessor.cancelLoading(player);
             player.sendMessage(configuration.getMessage_cancelledQueue());
         } else {
-            player.sendMessage();
+            player.sendMessage(configuration.getMessage_notInQueue());
         }
     }
 
