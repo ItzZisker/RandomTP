@@ -8,7 +8,10 @@ import me.kallix.randomtp.utils.Pair;
 import me.kallix.randomtp.utils.ScheduledQueue;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -16,6 +19,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class TeleportProcessor {
@@ -61,21 +65,51 @@ public final class TeleportProcessor {
         }
     }
 
+    private void randomTeleport0(World world, Player player) {
+
+        int randomX = RANDOM.nextInt(config.getMinX(), config.getMaxX());
+        int randomZ = RANDOM.nextInt(config.getMinZ(), config.getMaxZ());
+
+        int chunkX = randomX >> 4;
+        int chunkZ = randomZ >> 4;
+
+        if (world.isChunkGenerated(chunkX, chunkZ)) {
+            if (world.isChunkLoaded(chunkX, chunkZ)) {
+                teleportAverageHeight(world, randomX, randomZ, player);
+            } else {
+                submitLoading0(player, world, randomX, randomZ, false);
+            }
+        } else {
+            submitLoading0(player, world, randomX, randomZ, true);
+        }
+    }
+
     public boolean isLoading(Player player) {
         return chunkLoadingQueue.contains(player);
     }
 
     public void submitLoading(Player player, World world, int randomX, int randomZ, boolean generate) {
-        chunkLoadingQueue.submit(player).onCompleteSync(() -> {
-            world.loadChunk(randomX >> 4, randomZ >> 4, generate);
-            teleportAverageHeight(world, randomX, randomZ, player);
-            disposeBossBarQueue(player);
-        }, true);
+        chunkLoadingQueue.submit(player).onCompleteSync(() ->
+                submitLoading0(player, world, randomX, randomZ, generate), true);
+
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (isLoading(player)) {
                 submitBossBarQueue(player);
             }
         });
+    }
+
+    private void submitLoading0(Player player, World world, int randomX, int randomZ, boolean generate) {
+        world.loadChunk(randomX >> 4, randomZ >> 4, generate);
+
+        if (teleportAverageHeight(world, randomX, randomZ, player)) {
+            disposeBossBarQueue(player);
+        } else {
+            player.sendMessage(config.getMessage_teleport_tryAgain());
+            Bukkit.getScheduler().runTaskLater(plugin, () ->
+                    randomTeleport0(world, player), config.getTeleportFailWaitTicks());
+        }
+        cancelUpdateBossBarQueue(player);
     }
 
     public void cancelLoading(Player player) {
@@ -122,12 +156,23 @@ public final class TeleportProcessor {
         }
     }
 
-    public void teleportAverageHeight(World world, int x, int z, Player player) {
-        Location pLoc = player.getLocation();
+    private void cancelUpdateBossBarQueue(Player player) {
+        Pair<BukkitTask, BossBar> pair = bossBarQueue.get(player);
+        if (pair != null) {
+            pair.key().cancel();
+        }
+    }
 
-        player.teleport(new Location(world, x,
-                world.getHighestBlockYAt(x, z) + 1, z,
-                pLoc.getYaw(), pLoc.getPitch()));
+    public boolean teleportAverageHeight(World world, int x, int z, Player player) {
+
+        Location pLoc = player.getLocation();
+        Set<Material> blackList = config.getBlacklist_Blocks();
+
+        Block highestBlock = world.getHighestBlockAt(x, z);
+        Block topBlock = highestBlock.getRelative(BlockFace.UP);
+
+        return !blackList.contains(highestBlock.getType()) && !blackList.contains(topBlock.getType()) &&
+                player.teleport(new Location(world, x, topBlock.getY(), z, pLoc.getYaw(), pLoc.getPitch()));
     }
 
     public void destroy() {

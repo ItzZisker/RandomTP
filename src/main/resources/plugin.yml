@@ -4,6 +4,7 @@ main: me.kallix.randomtp.RandomTP
 api-version: 1.19
 commands:
   rtp:
+    permission-message: "§cYou don't have permission to execute this command."
     description: "Random tp command"
     aliases:
       - randomtp
