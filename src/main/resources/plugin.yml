@@ -8,5 +8,3 @@ commands:
     aliases:
       - randomtp
       - randomteleport
-  rtp-reload:
-    description: "Random tp reload command"

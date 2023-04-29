@@ -1,10 +1,8 @@
 package me.kallix.randomtp.commands.rtp;
 
 import com.google.common.collect.Sets;
-import me.kallix.randomtp.commands.rtp.sub.SubCancel;
-import me.kallix.randomtp.commands.rtp.sub.SubDebug;
-import me.kallix.randomtp.commands.rtp.sub.SubHelp;
-import me.kallix.randomtp.commands.rtp.sub.SubTeleport;
+import me.kallix.randomtp.RandomTP;
+import me.kallix.randomtp.commands.rtp.sub.*;
 import me.kallix.randomtp.config.Configuration;
 import me.kallix.randomtp.processor.TeleportProcessor;
 import org.bukkit.command.Command;
@@ -25,15 +23,14 @@ public final class RandomTPCommand implements CommandExecutor {
 
     private final Configuration configuration;
 
-    public RandomTPCommand(Configuration configuration, TeleportProcessor teleportProcessor) {
-        this.configuration = configuration;
-        this.subHelp = new SubHelp(configuration);
-        this.subTeleport = new SubTeleport(configuration, teleportProcessor);
+    public RandomTPCommand(RandomTP plugin) {
+        this.configuration = plugin.getConfiguration();
 
-        subCommands.add(subTeleport);
-        subCommands.add(subHelp);
-        subCommands.add(new SubDebug(teleportProcessor));
-        subCommands.add(new SubCancel(configuration, teleportProcessor));
+        subCommands.add(subHelp = new SubHelp(configuration));
+        subCommands.add(subTeleport = new SubTeleport(configuration, plugin.getTeleportProcessor()));
+        subCommands.add(new SubCancel(configuration, plugin.getTeleportProcessor()));
+        subCommands.add(new SubDebug(plugin.getTeleportProcessor()));
+        subCommands.add(new SubReload(plugin));
     }
 
     @Override
@@ -46,7 +43,7 @@ public final class RandomTPCommand implements CommandExecutor {
             exec(sender, subTeleport, label, args);
         } else {
             for (SubCommand subCommand : subCommands) {
-                if (subCommand.name().equals(args[0])) {
+                if (subCommand.name().equalsIgnoreCase(args[0])) {
                     return exec(sender, subCommand, label, args);
                 }
             }
