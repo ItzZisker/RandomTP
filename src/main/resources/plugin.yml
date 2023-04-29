@@ -1,0 +1,12 @@
+name: RandomTP
+version: '${version}'
+main: me.kallix.randomtp.RandomTP
+api-version: 1.19
+commands:
+  rtp:
+    description: "Random tp command"
+    aliases:
+      - randomtp
+      - randomteleport
+  rtp-reload:
+    description: "Random tp reload command"

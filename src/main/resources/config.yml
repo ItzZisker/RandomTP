@@ -1,0 +1,21 @@
+# Minimum and maximum range of random teleport (in block units)
+minX: -2000
+maxX: 2000
+minZ: -2000
+maxZ: 2000
+
+# Queue BossBar config
+queue-bossBar:
+  update-ticks: 20
+  format: "&6&lIn Queue ({pos}/{all})"
+  color: YELLOW
+
+# Message config
+messages:
+  already-in-queue: "&cAlready in queue"
+  player-joined-queue: "&eJoined queue"
+  player-cancelled-queue: "&eCancelled queue"
+  player-not-in-queue: "&cNot in queue"
+  no-permission: "&cNo permission"
+  only-player-command: "&cOnly players should execute this command!"
+  command-rtp-usage: "&cUsage: /{label} "
