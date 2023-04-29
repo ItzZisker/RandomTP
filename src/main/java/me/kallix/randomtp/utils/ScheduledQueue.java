@@ -225,7 +225,7 @@ public final class ScheduledQueue<T> {
         private final Plugin plugin;
 
         private final ReentrantLock lock = new ReentrantLock();
-        private final BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        private final BukkitScheduler scheduler = Bukkit.getScheduler();
 
         private Runnable handler;
         private E value;
