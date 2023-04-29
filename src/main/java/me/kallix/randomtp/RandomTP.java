@@ -2,7 +2,6 @@ package me.kallix.randomtp;
 
 import lombok.Getter;
 import me.kallix.randomtp.commands.rtp.RandomTPCommand;
-import me.kallix.randomtp.commands.rtp_reload.ReloadCommand;
 import me.kallix.randomtp.config.Configuration;
 import me.kallix.randomtp.listeners.PlayerQuitListener;
 import me.kallix.randomtp.processor.TeleportProcessor;
