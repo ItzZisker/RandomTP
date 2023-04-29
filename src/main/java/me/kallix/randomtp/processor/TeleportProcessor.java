@@ -66,8 +66,15 @@ public final class TeleportProcessor {
     }
 
     public void submitLoading(Player player, World world, int randomX, int randomZ, boolean generate) {
-        chunkLoadingQueue.submit(player).onCompleteSync(() -> teleportAverageHeight(world, randomX, randomZ, player), generate);
-        submitBossBarQueue(player);
+        chunkLoadingQueue.submit(player).onCompleteSync(() -> {
+            world.loadChunk(randomX >> 4, randomZ >> 4, generate);
+            teleportAverageHeight(world, randomX, randomZ, player);
+        }, true);
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (isLoading(player)) {
+                submitBossBarQueue(player);
+            }
+        });
     }
 
     public void cancelLoading(Player player) {
