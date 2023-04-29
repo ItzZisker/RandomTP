@@ -114,7 +114,7 @@ public final class TeleportProcessor {
     }
 
     public void disposeBossBarQueue(Player player) {
-        Pair<BukkitTask, BossBar> pair = bossBarQueue.get(player);
+        Pair<BukkitTask, BossBar> pair = bossBarQueue.remove(player);
         if (pair != null) {
             pair.key().cancel();
             pair.value().removeAll();
