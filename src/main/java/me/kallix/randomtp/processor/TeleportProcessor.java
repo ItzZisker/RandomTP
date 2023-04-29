@@ -34,7 +34,7 @@ public final class TeleportProcessor {
     public TeleportProcessor(RandomTP plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfiguration();
-        this.chunkLoadingQueue = ScheduledQueue.newScheduledQueue(plugin, 0, 20, true);
+        this.chunkLoadingQueue = ScheduledQueue.newScheduledQueue(plugin, 0, config.getQueueWaitTicks(), true);
     }
 
     public void randomTeleport(Player player, World world) {
@@ -69,6 +69,7 @@ public final class TeleportProcessor {
         chunkLoadingQueue.submit(player).onCompleteSync(() -> {
             world.loadChunk(randomX >> 4, randomZ >> 4, generate);
             teleportAverageHeight(world, randomX, randomZ, player);
+            disposeBossBarQueue(player);
         }, true);
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (isLoading(player)) {

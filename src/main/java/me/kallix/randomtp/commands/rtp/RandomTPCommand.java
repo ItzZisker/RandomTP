@@ -39,7 +39,7 @@ public final class RandomTPCommand implements CommandExecutor {
                              String[] args) {
 
         if (args.length == 0) {
-            exec(sender, subTeleport, label, args);
+            exec(sender, subTeleport, label, new String[]{""});
         } else {
             for (RandomTPSubCommand subCommand : subCommands) {
                 if (subCommand.name().equalsIgnoreCase(args[0])) {
@@ -53,10 +53,11 @@ public final class RandomTPCommand implements CommandExecutor {
     }
 
     public boolean exec(CommandSender sender, RandomTPSubCommand subCommand, String label, String[] args) {
-        if (subCommand.isPlayerOnly() == sender instanceof Player) {
+        if (!subCommand.isPlayerOnly() || sender instanceof Player) {
             if (sender instanceof ConsoleCommandSender ||
                     (subCommand.permission() == null || sender.hasPermission(subCommand.permission()))) {
-                subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length - 1));
+                subCommand.execute(sender, label, args.length == 1 ? new String[]{} :
+                        Arrays.copyOfRange(args, 1, args.length - 1));
                 return true;
             } else {
                 sender.sendMessage(configuration.getMessage_noPermission());

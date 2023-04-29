@@ -13,6 +13,7 @@ public final class Configuration {
     private int queueBossBarUpdateTicks;
     private String queueBossBarFormat;
     private BarColor queueBossBarColor;
+    private int queueWaitTicks;
 
     private String message_alreadyInQueue;
     private String message_onlyPlayerCommand;
@@ -32,6 +33,7 @@ public final class Configuration {
         int queueBossBarUpdateTicks;
         String queueBossBarFormat;
         BarColor queueBossBarColor;
+        int queueWaitTicks;
 
         String message_alreadyInQueue;
         String message_onlyPlayerCommand;
@@ -50,6 +52,7 @@ public final class Configuration {
             queueBossBarUpdateTicks = configFile.getInt("queue-bossBar.update-ticks");
             queueBossBarFormat = ChatColor.translateAlternateColorCodes('&', configFile.getString("queue-bossBar.format"));
             queueBossBarColor = BarColor.valueOf(configFile.getString("queue-bossBar.color"));
+            queueWaitTicks = configFile.getInt("queue-wait-ticks");
 
             message_alreadyInQueue = ChatColor.translateAlternateColorCodes('&', configFile.getString("messages.already-in-queue"));
             message_onlyPlayerCommand = ChatColor.translateAlternateColorCodes('&', configFile.getString("messages.only-player-command"));
@@ -77,6 +80,7 @@ public final class Configuration {
         this.queueBossBarUpdateTicks = queueBossBarUpdateTicks;
         this.queueBossBarFormat = queueBossBarFormat;
         this.queueBossBarColor = queueBossBarColor;
+        this.queueWaitTicks = queueWaitTicks;
 
         this.message_alreadyInQueue = message_alreadyInQueue;
         this.message_onlyPlayerCommand = message_onlyPlayerCommand;

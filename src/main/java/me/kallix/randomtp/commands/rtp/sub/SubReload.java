@@ -16,6 +16,7 @@ public final class SubReload implements RandomTPSubCommand {
         try {
             plugin.reloadConfig();
             plugin.getConfiguration().reloadConfig(plugin.getConfig());
+            sender.sendMessage(ChatColor.GREEN + "Config reloaded!");
         } catch (Exception e) {
             sender.sendMessage(ChatColor.RED + "There's an exception during the reload process: " + e.getMessage());
             e.printStackTrace();

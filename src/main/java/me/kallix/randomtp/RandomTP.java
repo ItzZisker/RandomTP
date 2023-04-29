@@ -16,6 +16,9 @@ public final class RandomTP extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        this.saveDefaultConfig();
+        this.reloadConfig();
+
         this.configuration = new Configuration(getConfig());
         this.teleportProcessor = new TeleportProcessor(this);
 
