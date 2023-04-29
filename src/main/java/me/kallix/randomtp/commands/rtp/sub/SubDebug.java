@@ -1,12 +1,12 @@
 package me.kallix.randomtp.commands.rtp.sub;
 
 import lombok.RequiredArgsConstructor;
-import me.kallix.randomtp.commands.rtp.SubCommand;
+import me.kallix.randomtp.commands.rtp.RandomTPSubCommand;
 import me.kallix.randomtp.processor.TeleportProcessor;
 import org.bukkit.command.CommandSender;
 
 @RequiredArgsConstructor
-public final class SubDebug implements SubCommand {
+public final class SubDebug implements RandomTPSubCommand {
 
     private final TeleportProcessor teleportProcessor;
 

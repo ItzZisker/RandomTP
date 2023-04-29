@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import me.kallix.randomtp.RandomTP;
 import me.kallix.randomtp.commands.rtp.sub.*;
 import me.kallix.randomtp.config.Configuration;
-import me.kallix.randomtp.processor.TeleportProcessor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,10 +15,10 @@ import java.util.Set;
 
 public final class RandomTPCommand implements CommandExecutor {
 
-    private final Set<SubCommand> subCommands = Sets.newHashSet();
+    private final Set<RandomTPSubCommand> subCommands = Sets.newHashSet();
 
-    private final SubCommand subHelp;
-    private final SubCommand subTeleport;
+    private final RandomTPSubCommand subHelp;
+    private final RandomTPSubCommand subTeleport;
 
     private final Configuration configuration;
 
@@ -42,7 +41,7 @@ public final class RandomTPCommand implements CommandExecutor {
         if (args.length == 0) {
             exec(sender, subTeleport, label, args);
         } else {
-            for (SubCommand subCommand : subCommands) {
+            for (RandomTPSubCommand subCommand : subCommands) {
                 if (subCommand.name().equalsIgnoreCase(args[0])) {
                     return exec(sender, subCommand, label, args);
                 }
@@ -53,7 +52,7 @@ public final class RandomTPCommand implements CommandExecutor {
         return true;
     }
 
-    public boolean exec(CommandSender sender, SubCommand subCommand, String label, String[] args) {
+    public boolean exec(CommandSender sender, RandomTPSubCommand subCommand, String label, String[] args) {
         if (subCommand.isPlayerOnly() == sender instanceof Player) {
             if (sender instanceof ConsoleCommandSender ||
                     (subCommand.permission() == null || sender.hasPermission(subCommand.permission()))) {

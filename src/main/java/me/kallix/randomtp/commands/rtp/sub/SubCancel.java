@@ -1,14 +1,14 @@
 package me.kallix.randomtp.commands.rtp.sub;
 
 import lombok.RequiredArgsConstructor;
-import me.kallix.randomtp.commands.rtp.SubCommand;
+import me.kallix.randomtp.commands.rtp.RandomTPSubCommand;
 import me.kallix.randomtp.config.Configuration;
 import me.kallix.randomtp.processor.TeleportProcessor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @RequiredArgsConstructor
-public final class SubCancel implements SubCommand {
+public final class SubCancel implements RandomTPSubCommand {
 
     private final Configuration configuration;
     private final TeleportProcessor teleportProcessor;

@@ -2,12 +2,12 @@ package me.kallix.randomtp.commands.rtp.sub;
 
 import lombok.RequiredArgsConstructor;
 import me.kallix.randomtp.RandomTP;
-import me.kallix.randomtp.commands.rtp.SubCommand;
+import me.kallix.randomtp.commands.rtp.RandomTPSubCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 @RequiredArgsConstructor
-public final class SubReload implements SubCommand {
+public final class SubReload implements RandomTPSubCommand {
 
     private final RandomTP plugin;
 

@@ -20,8 +20,7 @@ public final class RandomTP extends JavaPlugin {
         this.teleportProcessor = new TeleportProcessor(this);
 
         try {
-            getCommand("rtp").setExecutor(new RandomTPCommand(configuration, teleportProcessor));
-            getCommand("rtp-reload").setExecutor(new ReloadCommand(this));
+            getCommand("rtp").setExecutor(new RandomTPCommand(this));
         } catch (NullPointerException e) {
             throw new IllegalStateException("Bad plugin.yml");
         }
