@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.kallix.randomtp.commands.rtp.RandomTPCommand;
 import me.kallix.randomtp.commands.rtp_reload.ReloadCommand;
 import me.kallix.randomtp.config.Configuration;
+import me.kallix.randomtp.listeners.PlayerQuitListener;
 import me.kallix.randomtp.processor.TeleportProcessor;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +26,8 @@ public final class RandomTP extends JavaPlugin {
         } catch (NullPointerException e) {
             throw new IllegalStateException("Bad plugin.yml");
         }
+        getServer().getPluginManager()
+                .registerEvents(new PlayerQuitListener(teleportProcessor), this);
     }
 
     @Override

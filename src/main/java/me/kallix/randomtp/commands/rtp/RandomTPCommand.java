@@ -58,7 +58,8 @@ public final class RandomTPCommand implements CommandExecutor {
 
     public boolean exec(CommandSender sender, SubCommand subCommand, String label, String[] args) {
         if (subCommand.isPlayerOnly() == sender instanceof Player) {
-            if (sender instanceof ConsoleCommandSender || sender.hasPermission(subCommand.permission())) {
+            if (sender instanceof ConsoleCommandSender ||
+                    (subCommand.permission() == null || sender.hasPermission(subCommand.permission()))) {
                 subCommand.execute(sender, label, Arrays.copyOfRange(args, 1, args.length - 1));
                 return true;
             } else {
