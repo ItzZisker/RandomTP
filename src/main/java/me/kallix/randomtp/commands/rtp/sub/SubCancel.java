@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import me.kallix.randomtp.commands.rtp.RandomTPSubCommand;
 import me.kallix.randomtp.config.Configuration;
 import me.kallix.randomtp.processor.TeleportProcessor;
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

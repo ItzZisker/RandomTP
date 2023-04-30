@@ -28,6 +28,7 @@ public final class TeleportProcessor {
 
     @Getter
     private final Map<Player, Pair<BukkitTask, BossBar>> bossBarQueue = Maps.newHashMap();
+    private final Map<Player, BukkitTask> teleportRetry = Maps.newHashMap();
 
     private final Plugin plugin;
     private final Configuration config;
@@ -66,21 +67,22 @@ public final class TeleportProcessor {
     }
 
     private void randomTeleport0(World world, Player player) {
+        if (player.isOnline()) {
+            int randomX = RANDOM.nextInt(config.getMinX(), config.getMaxX());
+            int randomZ = RANDOM.nextInt(config.getMinZ(), config.getMaxZ());
 
-        int randomX = RANDOM.nextInt(config.getMinX(), config.getMaxX());
-        int randomZ = RANDOM.nextInt(config.getMinZ(), config.getMaxZ());
+            int chunkX = randomX >> 4;
+            int chunkZ = randomZ >> 4;
 
-        int chunkX = randomX >> 4;
-        int chunkZ = randomZ >> 4;
-
-        if (world.isChunkGenerated(chunkX, chunkZ)) {
-            if (world.isChunkLoaded(chunkX, chunkZ)) {
-                teleportAverageHeight(world, randomX, randomZ, player);
+            if (world.isChunkGenerated(chunkX, chunkZ)) {
+                if (world.isChunkLoaded(chunkX, chunkZ)) {
+                    teleportAverageHeight(world, randomX, randomZ, player);
+                } else {
+                    submitLoading0(player, world, randomX, randomZ, false);
+                }
             } else {
-                submitLoading0(player, world, randomX, randomZ, false);
+                submitLoading0(player, world, randomX, randomZ, true);
             }
-        } else {
-            submitLoading0(player, world, randomX, randomZ, true);
         }
     }
 
@@ -106,15 +108,30 @@ public final class TeleportProcessor {
             disposeBossBarQueue(player);
         } else {
             player.sendMessage(config.getMessage_teleport_tryAgain());
-            Bukkit.getScheduler().runTaskLater(plugin, () ->
-                    randomTeleport0(world, player), config.getTeleportFailWaitTicks());
+
+            teleportRetry.put(player, Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                cancelRetry(player);
+                randomTeleport0(world, player);
+            }, config.getTeleportFailWaitTicks()));
         }
         cancelUpdateBossBarQueue(player);
     }
 
     public void cancelLoading(Player player) {
         disposeBossBarQueue(player);
+        cancelQueue(player);
+        cancelRetry(player);
+    }
+
+    public void cancelQueue(Player player) {
         chunkLoadingQueue.dispose(player);
+    }
+
+    public void cancelRetry(Player player) {
+        BukkitTask task = teleportRetry.remove(player);
+        if (task != null) {
+            task.cancel();
+        }
     }
 
     public void submitBossBarQueue(Player player) {
